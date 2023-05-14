@@ -31,9 +31,9 @@ export default function CreateProfile() {
 
 	return (
 		<>
-			<main>
+			<main className="flex justify-center">
 				<form onSubmit={handleSubmit}>
-					<h1 className="font-bold text-xl">Create Profile</h1>
+					<h1 className="font-bold text-xl mb-3 text-center">Create Profile</h1>
 
 					<InputField
 						label="Username"
@@ -57,13 +57,15 @@ export default function CreateProfile() {
 					/>
 
 					<InputField
-						label="Reapeat Password"
-						id="repeatpassword"
+						label="Repeat Password"
+						id="repeatPassword"
 						value={repeatPassword}
 						handleChange={handleChange}
 					/>
 
-					<button>Submit</button>
+					<button className="text-white font-bold rounded-full justify-center">
+						Submit
+					</button>
 				</form>
 			</main>
 		</>
