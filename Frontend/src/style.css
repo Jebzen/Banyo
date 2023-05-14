@@ -1,0 +1,54 @@
+/*Icons*/
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
+
+/*Font*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/*Tailwind*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*Variables*/
+:root {
+	--bg-blue: #122c60;
+	--prime-blue: #1eb2e8;
+	--dark-grey: #303030;
+	--grey: #c4c4c4;
+	--light-grey: #e4e4e4;
+	--white: #ffffff;
+}
+
+html,
+body {
+	font-family: "Inter", sans-serif;
+	background-color: var(--bg-blue);
+}
+
+main {
+	padding: 4rem;
+	background-color: var(--white);
+}
+
+.input-section > input {
+	padding: 20px;
+	border: 1px solid var(--light-grey);
+}
+
+.input-section > input + label {
+	transition: ease-out 0.05s;
+}
+
+.input-section > input:focus-within + label,
+.input-section > input:not(:placeholder-shown) + label {
+	font-size: 0.75em;
+	top: -1rem;
+	background-color: var(--white);
+	padding: 3px;
+	border-radius: 3px;
+}
+
+.input-section > input:focus-within,
+.input-section > input:not(:placeholder-shown) {
+	border: 1px solid black;
+}
