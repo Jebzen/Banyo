@@ -8,27 +8,27 @@ form {
 	padding: 45px 73px;
 }
 
-.input-section > input {
+.input-section input {
 	border: 2px solid var(--light-grey);
 }
 
-.input-section > input + label {
+.input-section input + label {
 	background-color: var(--white);
 	transform: translate(0px, -50%);
 	color: var(--grey);
 }
 
-.input-section > input:focus-within + label,
-.input-section > input:not(:placeholder-shown) + label {
+.input-section input:focus-within + label,
+.input-section input:not(:placeholder-shown) + label {
 	@apply px-2 rounded-md;
 	margin-left: 14px;
 	font-size: 0.75em;
 	transform: translate(0px, -42px);
 }
 
-.input-section > input:focus-within,
-.input-section > input:not(:placeholder-shown),
-.input-section > input:focus-visible {
+.input-section input:focus-within,
+.input-section input:not(:placeholder-shown),
+.input-section input:focus-visible {
 	box-shadow: none;
 	outline: none;
 }
