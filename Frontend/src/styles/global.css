@@ -23,3 +23,8 @@ html,
 body {
 	font-family: "Inter", sans-serif;
 }
+
+/* IDK why i need this but i do */
+.bg-blue-prime {
+	background-color: var(--prime-blue);
+}
