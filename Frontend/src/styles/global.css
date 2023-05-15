@@ -28,3 +28,6 @@ body {
 .bg-blue-prime {
 	background-color: var(--prime-blue);
 }
+.bg-white {
+	background-color: var(--white);
+}

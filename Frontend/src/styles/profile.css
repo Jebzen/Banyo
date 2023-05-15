@@ -1,0 +1,3 @@
+.grid-profile {
+	grid-template-columns: 1fr auto;
+}

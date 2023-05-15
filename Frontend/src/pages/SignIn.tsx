@@ -100,7 +100,7 @@ export default function SignIn() {
 							)}
 						</section>
 
-						<button className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime hover:bg-blue-700 focus-within:bg-blue-700">
+						<button className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime hover:bg-blue-600 focus-within:bg-blue-600">
 							Log in
 						</button>
 					</section>
