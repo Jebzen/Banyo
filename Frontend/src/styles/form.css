@@ -3,7 +3,7 @@ body {
 	background-color: var(--bg-blue);
 }
 
-form {
+form.form-section {
 	background-color: var(--white);
 	padding: 45px 73px;
 }
@@ -31,4 +31,8 @@ form {
 .input-section input:focus-visible {
 	box-shadow: none;
 	outline: none;
+}
+
+.grid-profile {
+	grid-template-columns: 1fr auto;
 }
