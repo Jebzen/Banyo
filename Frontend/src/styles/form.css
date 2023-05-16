@@ -32,7 +32,3 @@ form {
 	box-shadow: none;
 	outline: none;
 }
-
-button {
-	background-color: var(--prime-blue);
-}

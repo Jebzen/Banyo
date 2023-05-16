@@ -1,0 +1,9 @@
+.dashboard {
+	min-width: 500px;
+}
+
+@media (min-width: 800px) {
+	.dashboard {
+		min-width: 750px;
+	}
+}

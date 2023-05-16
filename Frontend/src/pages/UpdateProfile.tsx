@@ -1,17 +1,21 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import "../styles/form.css";
 
-export default function CreateProfile() {
+export default function UpdateProfile() {
+	const { username } = useParams();
+
 	const [formData, setFormData] = useState({
-		username: "",
+		user: username ? username : "",
 		email: "",
-		password: "",
+		oldpassword: "",
+		newpassword: "",
 		repeatPassword: "",
 	});
 
 	const [formError, setFormError] = useState<any>({});
 
-	const { username, email, password, repeatPassword } = formData;
+	const { user, email, oldpassword, newpassword, repeatPassword } = formData;
 
 	//Handle change event for all Inputs
 	const handleChange = (e: any) => {
@@ -28,7 +32,7 @@ export default function CreateProfile() {
 		/*Validation Start */
 
 		//Username invalid
-		if (username.toLowerCase() === "admin" || username.length < 1) {
+		if (user.toLowerCase() === "admin" || user.length < 1) {
 			errors = { ...errors, username: "Username invalid" };
 		}
 
@@ -50,17 +54,22 @@ export default function CreateProfile() {
 			errors = { ...errors, email: "Email already taken" };
 		}
 
+		//Not old password
+		if (!oldpassword) {
+			errors = { ...errors, oldpassword: "Not current password" };
+		}
+
 		//Password not strong enough
 		//Password pattern: upper and lower case, number, symbol and at least 7 characters
 		//Regex with help from https://regex101.com/
 		const passwordPattern =
 			/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/;
-		if (!password.match(passwordPattern)) {
-			errors = { ...errors, password: "Password not strong enough" };
+		if (!newpassword.match(passwordPattern)) {
+			errors = { ...errors, newpassword: "Password not strong enough" };
 		}
 
 		//Repeat Password not repeated
-		if (password !== repeatPassword) {
+		if (newpassword !== repeatPassword) {
 			errors = { ...errors, repeatPassword: "Passwords not the same" };
 		}
 
@@ -68,6 +77,7 @@ export default function CreateProfile() {
 			setFormError({
 				...errors,
 			});
+			return;
 		}
 		/*Validation End */
 	};
@@ -78,7 +88,7 @@ export default function CreateProfile() {
 				<form onSubmit={handleSubmit} className="h-fit rounded-lg self-center">
 					<section className="flex flex-col w-80">
 						<h1 className="font-bold text-2xl mb-12 text-center">
-							Create Profile
+							Update Profile
 						</h1>
 
 						{/* USERNAME */}
@@ -89,7 +99,7 @@ export default function CreateProfile() {
 									placeholder="Username"
 									id="username"
 									name="username"
-									value={formData.username}
+									value={user}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
@@ -129,7 +139,7 @@ export default function CreateProfile() {
 							)}
 						</section>
 
-						{/* PASSWORD */}
+						{/* OLD PASSWORD */}
 						<section className="mb-4">
 							<section className="relative input-section">
 								<input
@@ -137,7 +147,7 @@ export default function CreateProfile() {
 									placeholder="Password"
 									id="password"
 									name="password"
-									value={formData.password}
+									value={formData.oldpassword}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
@@ -148,8 +158,32 @@ export default function CreateProfile() {
 									Password
 								</label>
 							</section>
-							{formError?.password && (
-								<p className="text-red-500">{formError.password}</p>
+							{formError?.oldpassword && (
+								<p className="text-red-500">{formError.oldpassword}</p>
+							)}
+						</section>
+
+						{/* OLD PASSWORD */}
+						<section className="mb-4">
+							<section className="relative input-section">
+								<input
+									type="text"
+									placeholder="Password"
+									id="password"
+									name="password"
+									value={formData.newpassword}
+									onChange={handleChange}
+									className="p-5 border-2 rounded-md border-solid flex w-full"
+								/>
+								<label
+									htmlFor="password"
+									className="absolute left-0 items-center flex cursor-text ms-5 p-px ease-out duration-75 top-2/4"
+								>
+									Password
+								</label>
+							</section>
+							{formError?.newpassword && (
+								<p className="text-red-500">{formError.newpassword}</p>
 							)}
 						</section>
 

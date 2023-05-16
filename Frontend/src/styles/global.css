@@ -31,3 +31,7 @@ body {
 .bg-white {
 	background-color: var(--white);
 }
+
+button {
+	background-color: var(--prime-blue);
+}
