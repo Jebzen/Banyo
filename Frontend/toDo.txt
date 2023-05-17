@@ -1,0 +1,28 @@
+Backend:
+  Set up initial backend folder and paths
+  Determine each path:
+    Create User
+    Read user based on username, email or jwstoken
+    Login with user and get JWS token back
+    Edit user based on JWS token
+    Delete user based on Admin JWS token
+
+
+Frontend:
+  Set up proper jws security check
+  Determine cypress tests:
+    Create an user + Fail
+    Login with said user + Fail
+    See user profile
+    Update user + See user profile
+
+  Login system:
+    Save JwsToken after login
+    Delete Jwstoken on logout
+  
+  Only access to dashboard with admintoken
+  Only access to UserProfile with jwstoken
+  
+  Create profile log in nav
+  Sign in create profile nav
+  Log out btn on dashboard + UserProfile
