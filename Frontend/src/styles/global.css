@@ -11,7 +11,7 @@
 
 /*Variables*/
 :root {
-	--bg-blue: #122c60;
+	--blue: #122c60;
 	--prime-blue: #1eb2e8;
 	--dark-grey: #303030;
 	--grey: #c4c4c4;
@@ -25,11 +25,20 @@ body {
 }
 
 /* IDK why i need this but i do */
+.bg-blue {
+	background-color: var(--blue);
+}
 .bg-blue-prime {
 	background-color: var(--prime-blue);
 }
 .bg-white {
 	background-color: var(--white);
+}
+.bg-light-grey {
+	background-color: var(--light-grey);
+}
+.text-light-grey {
+	color: #a4a4a4;
 }
 
 button.btn {

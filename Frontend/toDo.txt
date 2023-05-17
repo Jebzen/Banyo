@@ -22,7 +22,3 @@ Frontend:
   
   Only access to dashboard with admintoken
   Only access to UserProfile with jwstoken
-  
-  Create profile log in nav
-  Sign in create profile nav
-  Log out btn on dashboard + UserProfile

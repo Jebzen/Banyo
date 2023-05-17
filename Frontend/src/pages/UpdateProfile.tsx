@@ -84,7 +84,7 @@ export default function UpdateProfile() {
 
 	return (
 		<>
-			<main className="flex justify-center min-h-screen">
+			<main className="flex justify-center min-h-screen bg-light-grey">
 				<form
 					onSubmit={handleSubmit}
 					className="h-fit rounded-lg self-center form-section"
@@ -217,6 +217,12 @@ export default function UpdateProfile() {
 						<button className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime btn hover:bg-blue-600 focus-within:bg-blue-600">
 							Submit
 						</button>
+					</section>
+
+					<section className="text-center mt-5 text-xs text-gray-500">
+						<a href={"/user/" + user} className="underline">
+							Go back
+						</a>
 					</section>
 				</form>
 			</main>

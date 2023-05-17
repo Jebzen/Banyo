@@ -4,6 +4,11 @@ import { Outlet, Navigate } from "react-router-dom";
 const PrivateRoutes = () => {
 	const jwsToken = localStorage.getItem("jwstoken");
 
+	//TO DO, token security
+	if (jwsToken === null) {
+		//return <Navigate to="/login" />;
+	}
+
 	return true ? <Outlet /> : <Navigate to="/login" />;
 };
 

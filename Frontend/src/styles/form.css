@@ -1,11 +1,6 @@
-html,
-body {
-	background-color: var(--bg-blue);
-}
-
 form.form-section {
 	background-color: var(--white);
-	padding: 45px 73px;
+	padding: 60px 46px 73px 46px;
 }
 
 .input-section input {

@@ -44,7 +44,7 @@ export default function SignIn() {
 	};
 
 	return (
-		<main className="flex justify-center min-h-screen">
+		<main className="flex justify-center min-h-screen bg-blue">
 			<form
 				onSubmit={handleSubmit}
 				className="h-fit rounded-lg self-center form-section"
@@ -105,6 +105,12 @@ export default function SignIn() {
 					<button className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime btn hover:bg-blue-600 focus-within:bg-blue-600">
 						Log in
 					</button>
+				</section>
+				<section className="text-center mt-5 text-xs text-gray-500">
+					<span>Need an account? </span>
+					<a href="/create" className="underline">
+						Create a profile
+					</a>
 				</section>
 			</form>
 		</main>
