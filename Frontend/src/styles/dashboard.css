@@ -1,3 +1,8 @@
+html,
+body {
+	background-color: var(--light-grey);
+}
+
 .dashboard {
 	min-width: 500px;
 }
@@ -6,4 +11,14 @@
 	.dashboard {
 		min-width: 750px;
 	}
+}
+
+header,
+.user-list > section {
+	grid-template-columns: 262px 340px 72px;
+}
+
+.deleteIcon:hover {
+	filter: invert(24%) sepia(76%) saturate(7485%) hue-rotate(356deg)
+		brightness(92%) contrast(122%);
 }
