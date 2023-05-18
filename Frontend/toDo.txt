@@ -20,5 +20,5 @@ Frontend:
     Save JwsToken after login
     Delete Jwstoken on logout
   
-  Only access to dashboard with admintoken
   Only access to UserProfile with jwstoken
+  Only access to dashboard with admintoken

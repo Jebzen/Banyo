@@ -50,9 +50,7 @@ export default function SignIn() {
 				className="h-fit rounded-lg self-center form-section"
 			>
 				<section className="flex flex-col w-80">
-					<h1 className="font-bold text-2xl mb-12 text-center">
-						Create Profile
-					</h1>
+					<h1 className="font-bold text-2xl mb-12 text-center">Sing In</h1>
 
 					{/* USERNAME */}
 					<section className="mb-4">

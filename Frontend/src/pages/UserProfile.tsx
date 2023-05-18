@@ -1,9 +1,15 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "../styles/form.css";
 
 export default function UserProfile() {
 	//const token = localStorage.getItem("jwsToken");
+	let navigate = useNavigate();
 	const { username } = useParams();
+
+	function logOut() {
+		localStorage.removeItem("jwstoken");
+		navigate("/login");
+	}
 
 	return (
 		<main className="flex justify-center min-h-screen bg-light-grey flex-col">
@@ -26,7 +32,10 @@ export default function UserProfile() {
 			</section>
 
 			<section className="flex justify-center mt-14">
-				<button className="rounded-full justify-center py-5 w-72 text-gray-400 border-2 border-solid border-gray-400 font-bold hover:bg-gray-400 hover:text-white focus-within:bg-gray-400 focus-within:text-white">
+				<button
+					onClick={logOut}
+					className="rounded-full justify-center py-5 w-72 text-gray-400 border-2 border-solid border-gray-400 font-bold hover:bg-gray-400 hover:text-white focus-within:bg-gray-400 focus-within:text-white"
+				>
 					Log Out
 				</button>
 			</section>

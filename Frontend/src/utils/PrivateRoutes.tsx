@@ -2,6 +2,8 @@
 import { Outlet, Navigate } from "react-router-dom";
 
 const PrivateRoutes = () => {
+	console.log("Private Route");
+
 	const jwsToken = localStorage.getItem("jwstoken");
 
 	//TO DO, token security
