@@ -42,7 +42,7 @@ $routes = [
   'GET' => [
     //All users
     '/users' => 'UserController@getAllUsers',
-    //User by id //DEC
+    //User by id //Maybe change to username?
     '/users/{id}' => 'UserController@getUserById',
   ],
   'POST' => [
@@ -76,8 +76,6 @@ foreach ($routes[$requestMethod] as $route => $handler) {
     break;
   }
 }
-
-var_dump($routeFound);
 
 if($routeFound){
   //$handler is saved from previous foreach function
