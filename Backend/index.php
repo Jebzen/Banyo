@@ -69,6 +69,7 @@ $requestPath = preg_replace('#\.php#','',preg_replace('#/Banyo/Backend#', '', $_
 // Find the matching route
 $routeFound = false;
 foreach ($routes[$requestMethod] as $route => $handler) {
+  //Pattern for replacement of {something}
   $pattern = '#^' . preg_replace('/{[^\/]+}/', '([^/]+)', $route) . '$#';
   if (preg_match($pattern, $requestPath, $matches)) {
     $routeFound = true;
@@ -77,3 +78,34 @@ foreach ($routes[$requestMethod] as $route => $handler) {
 }
 
 var_dump($routeFound);
+
+if($routeFound){
+  //$handler is saved from previous foreach function
+  //UserController@getAllUsers = UserController & getAllUsers
+  list($controllerName, $methodName) = explode('@', $handler);
+
+  //userController to UserController always
+  $controllerClassName = ucfirst($controllerName);
+
+  //Finds the file in the system
+  //ex: controllers/UserController.php
+  $controllerFile = 'controllers/' . $controllerClassName . '.php';
+
+  if (file_exists($controllerFile)) {
+    //Read the controller
+    require_once $controllerFile;
+
+    //Makes a new controller from the class
+    //ex: $controller = new UserController()
+    $controller = new $controllerClassName();
+
+    //Runs the targeted method
+    //ex: UserController->GetAllUsers
+    $controller->$methodName($matches);
+  } else {
+    jsonResponse(['error' => 'Controller not found'], 404);
+  }
+
+} else{
+  jsonResponse(['error' => 'Route not found'], 404);
+}
