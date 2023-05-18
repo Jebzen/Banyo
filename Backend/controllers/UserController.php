@@ -3,7 +3,7 @@ class UserController{
   public function getAllusers(){
     // Fetch all users from the database
     $db = getDbConnection();
-    $stmt = $db->prepare('SELECT * FROM users');
+    $stmt = $db->prepare('SELECT user_id, username, email, created_at, updated_at FROM users');
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

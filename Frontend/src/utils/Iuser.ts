@@ -1,5 +1,5 @@
 export interface Iuser {
 	username: string;
 	email: string;
-	id: number | string;
+	user_id: number | string;
 }
