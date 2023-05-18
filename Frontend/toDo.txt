@@ -1,8 +1,10 @@
 Backend:
   Set up initial backend folder and paths
-  Determine each path:
+
+  API:
     Create User
     Read user based on username, email or jwstoken
+    Read all users
     Login with user and get JWS token back
     Edit user based on JWS token
     Delete user based on Admin JWS token
