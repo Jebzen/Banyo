@@ -34,7 +34,7 @@ $routes = [
   ],
   'POST' => [
     //Create new user
-    '/users' => 'UserController@createUser',
+    '/users/create' => 'UserController@createUser',
     //Login with user
     '/users/login' => 'UserController@getUserJws',
   ],
