@@ -91,3 +91,9 @@ function identifyAuthBearer(){
     return [false, $e->getMessage() | 'Token invalid'];
   }
 }
+
+function hashPassword($password){
+  global $passwordHash;
+
+  return hash('gost', $password.$passwordHash);
+}

@@ -28,7 +28,7 @@ class UserController{
 
     //set easy variables
     $username = $requestData['username'];
-    $password = $requestData['password'];
+    $password = hashPassword($requestData['password']);
     
     //Search db for user & password
     $db = getDbConnection();
@@ -69,7 +69,7 @@ class UserController{
       jsonResponse(['error' => 'Username, Password or Email not send'], 400);
     }
     $username = $requestData['username'];
-    $password = $requestData['password'];
+    $password = hashPassword($requestData['password']);
     $email = $requestData['email'];
 
     //Save the dateTime now
@@ -152,7 +152,7 @@ class UserController{
     //Set variables
     $username = $requestData['username'];
     $email = $requestData['email'];
-    $password = $requestData['password'];
+    $password = hashPassword($requestData['password']);
     
     // Check if the username and email already exist on another user
     $stmt = $db->prepare('SELECT user_id FROM users WHERE (username = :username OR email = :email) AND NOT user_id = :user_id');
@@ -184,6 +184,56 @@ class UserController{
       jsonResponse(['message' => 'User updated successfully']);
     } else {
       jsonResponse(['error' => 'Failed to update user']);
+    }
+  }
+
+  public function deleteUser($params){
+    //Needs username, password and email in body
+    if(!isset($params[1])){
+      jsonResponse(['error' => 'No user_id sent!'], 400);
+    }
+    $user_id = $params[1];
+
+    //Jws bearer token
+    $AuthToken = identifyAuthBearer();
+
+    //If auth bearer true!
+    if(!$AuthToken[0]){
+      jsonResponse(['error' => $AuthToken[1]], 400);
+    }
+
+    //Decode the token
+    $TokenData = decodeJws(($AuthToken[1]));
+
+    //If token invalid
+    $dateTime = new DateTime();
+    if(!$TokenData[0] || !isset($TokenData[1]->dateTime)){
+      jsonResponse(['error' => "Token Invalid"], 400);
+    }
+    $tokenDateTime = new DateTime($TokenData[1]->dateTime);
+
+    if($tokenDateTime < $dateTime){
+      jsonResponse(['error' => "Token expired"], 400);
+    }
+
+    //If not Admin
+    //Hardcoded on user_id = 1
+    if($TokenData[1]->user_id != "1"){
+      jsonResponse(['error' => "Not authorized"], 400);
+    }
+    
+    $db = getDbConnection();
+
+    //Prepare, Bind & Execute
+    $stmt = $db->prepare('DELETE FROM users WHERE user_id = :user_id AND NOT user_id = 1 ');
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->execute();
+
+    //If successfull
+    if ($stmt->rowCount() > 0) {
+      jsonResponse(['message' => 'User deleted successfully']);
+    } else {
+      jsonResponse(['error' => 'Failed to delete user']);
     }
   }
 }

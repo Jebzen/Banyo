@@ -11,6 +11,7 @@ $dbName = $_ENV["DB_NAME"];
 $dbUser = $_ENV["DB_USER"];
 $dbPass = $_ENV["DB_PASS"];
 $jwsSecret = $_ENV["JWS_SECRET"];
+$passwordHash = $_ENV["PASSWORD_HASH"];
 
 //Timezone
 date_default_timezone_set('Europe/Copenhagen');
