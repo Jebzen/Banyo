@@ -40,7 +40,7 @@ $routes = [
   ],
   'PUT' => [
     //Edit existing user
-    '/users/{id}' => 'UserController@updateUser',
+    '/users' => 'UserController@updateUser',
   ],
   'DELETE' => [
     //Delete existing user only by admin
@@ -92,7 +92,6 @@ if($routeFound){
   } else {
     jsonResponse(['error' => 'Controller not found'], 404);
   }
-
 } else{
   jsonResponse(['error' => 'Route not found'], 404);
 }

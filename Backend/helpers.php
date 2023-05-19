@@ -1,6 +1,7 @@
 <?php
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
 // Function to send a JSON response with the specified status code
 function jsonResponse($data, $statusCode = 200) {
   header('Content-Type: application/json');
@@ -25,9 +26,11 @@ function getDbConnection() {
 //Encode JwsToken
 function encodeJws($object){
   global $jwsSecret;
+  
+  $data = (array)$object;
 
   $token = JWT::encode(
-    (array)$object,
+    $data,
     $jwsSecret,
     'HS512'
   );
@@ -45,5 +48,50 @@ function decodeJws($token){
 
   } catch(Exception $e){
     return [false, $e->getMessage()];
+  }
+}
+
+class tokenizer{
+  public $user_id;
+  public $username;
+  public $email;
+  public $dateTime;
+  function __construct($user_id, $username, $email) {
+
+    //Date 1 day in the future
+    $dateTime = new DateTime("now");
+    $dateTimeFormatted = $dateTime->format('Y-m-d H:i:s');
+
+    //Token info:
+    $this->user_id = $user_id;
+    $this->username = $username;
+    $this->email = $email;
+    $this->dateTime = $dateTimeFormatted;
+  }
+}
+
+function identifyAuthBearer(){
+  try{
+    $headers = getallheaders();
+    
+    if(!isset($headers['Authorization'])){
+      throw new Error("Token not identified");
+    }
+
+    $Authorization = explode(" ",$headers['Authorization']);
+
+    if(!isset($Authorization) || $Authorization[0] != "Bearer"){
+      throw new Error("Auth not bearer");
+    }
+
+    if(!isset($Authorization[1])){
+      throw new Error("No token recognized");
+    }
+
+    $token = $Authorization[1];
+    return [true, $token];
+
+  } catch(Exception $e){
+    return [false, $e->getMessage() | 'Token invalid'];
   }
 }
