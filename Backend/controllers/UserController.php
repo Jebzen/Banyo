@@ -22,29 +22,27 @@ class UserController{
     $requestData = json_decode(file_get_contents('php://input'), true);
 
     //Needs username and password in body
-    try{
-      if(!isset($requestData['username']) || !isset($requestData['password'])){
-        // Return a Error response
-        jsonResponse(['error' => 'Username or Password invalid'], 400);
-      }
-      $username = $requestData['username'];
-      $password = $requestData['password'];
-    } catch(Exception $e){
-      // Return a Error response
-      jsonResponse(['error' => 'Username or Password not Sent'], 400);
+    if(!isset($requestData['username']) || !isset($requestData['password'])){
+      jsonResponse(['error' => 'Username or Password invalid'], 400);
     }
+
+    //set easy variables
+    $username = $requestData['username'];
+    $password = $requestData['password'];
     
     //Search db for user & password
     $db = getDbConnection();
     $stmt = $db->prepare('SELECT user_id, username, email FROM users WHERE username = :username AND password = :password');
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':password', $password);
+
+    //Execute and fetch
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // If the user is found, return it as a JSON response
     if ($user) {
-      $data = new tokenizer($user['user_id'], $user['username'], $user['email']);
+      $data = new tokenizer($user['user_id']);
       jsonResponse(encodeJws($data));
     } else {
       // If the user is not found, return an error response
@@ -66,18 +64,13 @@ class UserController{
     $requestData = json_decode(file_get_contents('php://input'), true);
 
     //Needs username, password and email in body
-    try{
-      if(!isset($requestData['username']) || !isset($requestData['password']) || !isset($requestData['email'])){
-        // Return a Error response
-        jsonResponse(['error' => 'Username, Password or Email invalid'], 400);
-      }
-      $username = $requestData['username'];
-      $password = $requestData['password'];
-      $email = $requestData['email'];
-    } catch(Exception $e){
+    if(!isset($requestData['username']) || !isset($requestData['password']) || !isset($requestData['email'])){
       // Return a Error response
-      jsonResponse(['error' => 'Username, Password or Email not Sent'], 400);
+      jsonResponse(['error' => 'Username, Password or Email not send'], 400);
     }
+    $username = $requestData['username'];
+    $password = $requestData['password'];
+    $email = $requestData['email'];
 
     //Save the dateTime now
     $dateTime = new DateTime("now");
@@ -87,8 +80,12 @@ class UserController{
 
     //if user already exists
     $stmt = $db->prepare('SELECT * FROM users WHERE username = :username OR email = :email');
+
+    //Bind data
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
+
+    //Execute and check
     $result = $stmt->execute();
     if ($result && $stmt->rowCount() > 0) {
       jsonResponse(['error' => 'User already exists'], 400);
@@ -96,18 +93,21 @@ class UserController{
       
     // Insert the new user into the database
     $stmt = $db->prepare('INSERT INTO users (username, email, password, created_at, updated_at) VALUES (:username, :email, :password, :created_at, :updated_at)');
+
+    //Bind data
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $password);
     $stmt->bindParam(':created_at', $dateTimeFormatted);
     $stmt->bindParam(':updated_at', $dateTimeFormatted);
-    $result = $stmt->execute();
 
-    //If inserted
+    //Execute and check If inserted
+    $result = $stmt->execute();
     if ($result && $stmt->rowCount() > 0) {
       // User inserted successfully
-      $user = $this->getUserById($db->lastInsertId());
-      $data = new tokenizer($user['user_id'], $user['username'], $user['email']);
+
+      //Make token from id and return token
+      $data = new tokenizer($db->lastInsertId());
       jsonResponse(encodeJws($data));
     } else {
       // Failed to insert user
@@ -132,23 +132,14 @@ class UserController{
     if(!isset($TokenData[1]->dateTime)){
       jsonResponse(['error' => "No DateTime in token"], 400);
     }
+
     $tokenDateTime = new DateTime($TokenData[1]->dateTime);
-    if($dateTime < $tokenDateTime){
+    if($tokenDateTime < $dateTime){
       jsonResponse(['error' => "Token expired"], 400);
     }
 
     //Database connection
     $db = getDbConnection();
-
-    //If user is correct
-    $stmt = $db->prepare('SELECT * FROM users WHERE user_id = :user_id AND username = :username AND email = :email');
-    $stmt->bindParam(':user_id', $TokenData[1]->user_id);
-    $stmt->bindParam(':username', $TokenData[1]->username);
-    $stmt->bindParam(':email', $TokenData[1]->email);
-    $result = $stmt->execute();
-    if (!$result || $stmt->rowCount() < 1) {
-      jsonResponse(['error' => 'User not verified'], 400);
-    }
 
     // Retrieve the request payload
     $requestData = json_decode(file_get_contents('php://input'), true);
@@ -162,10 +153,9 @@ class UserController{
     $username = $requestData['username'];
     $email = $requestData['email'];
     $password = $requestData['password'];
-
     
     // Check if the username and email already exist on another user
-    $stmt = $db->prepare('SELECT id FROM users WHERE (username = :username OR email = :email) AND NOT user_id = :user_id');
+    $stmt = $db->prepare('SELECT user_id FROM users WHERE (username = :username OR email = :email) AND NOT user_id = :user_id');
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':user_id', $TokenData[1]->user_id);
@@ -176,7 +166,7 @@ class UserController{
       jsonResponse(['error' => 'Username or email already exists']);
     }
 
-    //Update user prepate
+    //Update user prepare
     $stmt = $db->prepare('UPDATE users SET username = :username, email = :email, password = :password, updated_at = :updated_at WHERE user_id = :user_id');
 
     //Bind data
@@ -191,8 +181,7 @@ class UserController{
     $result = $stmt->execute();
     
     if ($result && $stmt->rowCount() > 0) {
-      $data = new tokenizer($TokenData[1]->user_id, $username, $email);
-      jsonResponse(encodeJws($data));
+      jsonResponse(['message' => 'User updated successfully']);
     } else {
       jsonResponse(['error' => 'Failed to update user']);
     }

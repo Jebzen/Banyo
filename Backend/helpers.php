@@ -53,19 +53,15 @@ function decodeJws($token){
 
 class tokenizer{
   public $user_id;
-  public $username;
-  public $email;
   public $dateTime;
-  function __construct($user_id, $username, $email) {
+  function __construct($user_id) {
 
     //Date 1 day in the future
-    $dateTime = new DateTime("now");
+    $dateTime = new DateTime("+1 day");
     $dateTimeFormatted = $dateTime->format('Y-m-d H:i:s');
 
     //Token info:
     $this->user_id = $user_id;
-    $this->username = $username;
-    $this->email = $email;
     $this->dateTime = $dateTimeFormatted;
   }
 }
