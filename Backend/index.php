@@ -18,23 +18,12 @@ require_once 'helpers.php';
 
 //EXAMPLE OF JWS TOKEN ENCODE & DECODE
 /*
-$data = [
-  'userName' => "Jebzen",
-  'email' => "jeb.bentzen@gmail.com",
-  'id' => 1,
-];
-
-$token = JWT::encode(
-  $data,
-  $jwsSecret,
-  'HS512'
-);
-
-echo $token;
-
-$decodedToken = JWT::decode($token, new Key($jwsSecret, "HS512"));
-
-var_dump($decodedToken);
+try{
+  $decodedToken = JWT::decode($token, new Key("SecretKeyString", "HS512"));
+  var_dump($decodedToken);
+} catch(Exception $e){
+  var_dump($e->getMessage());
+}
 */
 
 // Define the routes and corresponding controller methods
@@ -42,12 +31,12 @@ $routes = [
   'GET' => [
     //All users
     '/users' => 'UserController@getAllUsers',
-    //User by id //Maybe change to username?
-    '/users/{id}' => 'UserController@getUserById',
   ],
   'POST' => [
     //Create new user
     '/users' => 'UserController@createUser',
+    //Login with user
+    '/users/login' => 'UserController@getUserJws',
   ],
   'PUT' => [
     //Edit existing user
