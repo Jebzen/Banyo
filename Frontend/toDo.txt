@@ -4,6 +4,9 @@ Backend:
     Edit user based on JWS token
     Delete user based on Admin JWS token
 
+  Encrypt Password
+  Should Jws be entire profile or just 3 values?
+
 
 Frontend:
   Set up proper jws security check
