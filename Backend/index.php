@@ -1,13 +1,28 @@
 <?php
 //From internet?
-declare(strict_types=1);
+//declare(strict_types=1);
 
 // Enable CORS
-header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Headers: Authorization,Accept,Origin,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range");
 header('Content-Type: application/json');
-//header('Content-Type: application/json');
+
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+} else{
+  header("Access-Control-Allow-Origin: *");
+}
+
+// Access-Control headers are received during OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+  if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])){
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+  }
+  if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])){
+    header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+  }
+  exit(0);
+}
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -17,16 +32,6 @@ require_once 'config.php';
 require_once 'helpers.php';
 
 //All code starts here
-
-//EXAMPLE OF JWS TOKEN ENCODE & DECODE
-/*
-try{
-  $decodedToken = JWT::decode($token, new Key("SecretKeyString", "HS512"));
-  var_dump($decodedToken);
-} catch(Exception $e){
-  var_dump($e->getMessage());
-}
-*/
 
 // Define the routes and corresponding controller methods
 $routes = [
@@ -40,7 +45,7 @@ $routes = [
     //Create new user
     '/users/create' => 'UserController@createUser',
     //Login with user
-    '/users/login' => 'UserController@getUserJws',
+    '/users/login' => 'UserController@getUserLogin',
   ],
   'PUT' => [
     //Edit existing user
@@ -59,15 +64,19 @@ $requestMethod = $_SERVER['REQUEST_METHOD']; //Get, Post, Put or Delete
 //Converts /Banyo/Backend/users to /users
 $requestPath = preg_replace('#\.php#','',preg_replace('#/Banyo/Backend#', '', $_SERVER['REQUEST_URI'])); 
 
-// Find the matching route
-$routeFound = false;
-foreach ($routes[$requestMethod] as $route => $handler) {
-  //Pattern for replacement of {something}
-  $pattern = '#^' . preg_replace('/{[^\/]+}/', '([^/]+)', $route) . '$#';
-  if (preg_match($pattern, $requestPath, $matches)) {
-    $routeFound = true;
-    break;
+try{
+  // Find the matching route
+  $routeFound = false;
+  foreach ($routes[$requestMethod] as $route => $handler) {
+    //Pattern for replacement of {something}
+    $pattern = '#^' . preg_replace('/{[^\/]+}/', '([^/]+)', $route) . '$#';
+    if (preg_match($pattern, $requestPath, $matches)) {
+      $routeFound = true;
+      break;
+    }
   }
+} catch(Exception $e){
+  jsonResponse(['error' => 'Method not found'], 404);
 }
 
 if($routeFound){

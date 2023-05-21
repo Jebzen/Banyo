@@ -84,11 +84,9 @@ export default function CreateProfile() {
 				body: JSON.stringify(formData),
 			});
 
-			console.log(response);
-
 			if (response.ok) {
 				const data = await response.json();
-				localStorage.setItem("jwstoken", data.token);
+				localStorage.setItem("jwsToken", data.token);
 				navigate("/user");
 			} else if (response.status == 400) {
 				const data = await response.json();

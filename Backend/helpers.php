@@ -70,24 +70,25 @@ function identifyAuthBearer(){
     $headers = getallheaders();
     
     if(!isset($headers['Authorization'])){
-      throw new Error("Token not identified");
+      throw new Exception("Token not identified");
     }
 
     $Authorization = explode(" ",$headers['Authorization']);
 
     if(!isset($Authorization) || $Authorization[0] != "Bearer"){
-      throw new Error("Auth not bearer");
+      throw new Exception("Auth not bearer");
     }
 
     if(!isset($Authorization[1])){
-      throw new Error("No token recognized");
+      throw new Exception("No token recognized");
     }
 
     $token = $Authorization[1];
     return [true, $token];
 
   } catch(Exception $e){
-    return [false, $e->getMessage() | 'Token invalid'];
+    return [false, 'Bearer Token invalid'];
+    //return [false, $e->getMessage() | 'Token invalid'];
   }
 }
 

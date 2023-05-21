@@ -2,16 +2,30 @@
 import { Outlet, Navigate } from "react-router-dom";
 
 const AdminRoute = () => {
-	console.log("Admin Route");
+	const apiUrl = import.meta.env.VITE_BACKEND_PATH;
+	//console.log("Private Route");
 
 	const jwsToken = localStorage.getItem("jwstoken");
 
 	//TO DO, token security
-	if (jwsToken === null && jwsToken !== "Admin") {
-		//return <Navigate to="/login" />;
+	if (jwsToken === null) {
+		return <Navigate to="/login" />;
 	}
 
-	return true ? <Outlet /> : <Navigate to="/login" />;
+	fetch(apiUrl + "/user")
+		.then((response) => {
+			if (response.ok) {
+				return response.json();
+			} else {
+				return <Navigate to="/login" />;
+			}
+		})
+		.then((data) => {
+			if (data.user.username !== "ADMIN") {
+				return <Outlet />;
+			}
+			return <Navigate to="/login" />;
+		});
 };
 
 export default AdminRoute;

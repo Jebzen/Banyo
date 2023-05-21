@@ -1,13 +1,14 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "../styles/form.css";
+import PrivateRoute from "../utils/PrivateRoute";
 
-export default function UserProfile() {
+function UserProfile() {
 	//const token = localStorage.getItem("jwsToken");
 	let navigate = useNavigate();
 	const { username } = useParams();
 
 	function logOut() {
-		localStorage.removeItem("jwstoken");
+		localStorage.removeItem("jwsToken");
 		navigate("/login");
 	}
 
@@ -42,3 +43,5 @@ export default function UserProfile() {
 		</main>
 	);
 }
+
+export default PrivateRoute(UserProfile);
