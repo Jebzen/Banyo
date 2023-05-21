@@ -99,6 +99,8 @@ export default function CreateProfile() {
 		/*Server Validation End */
 
 		setIsLoading(false);
+
+		console.log("Cypress can you see this?");
 	};
 
 	return (
