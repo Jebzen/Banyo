@@ -3,7 +3,6 @@ import CreateProfile from "./pages/CreateProfile";
 import SignIn from "./pages/SignIn";
 import UserProfile from "./pages/UserProfile";
 import UpdateProfile from "./pages/UpdateProfile";
-import AdminRoute from "./utils/AdminRoute";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
@@ -15,9 +14,7 @@ function App() {
 				<Route path="/login" element={<SignIn />} />
 				<Route element={<UserProfile />} path="/user" />
 				<Route element={<UpdateProfile />} path="/edit" />
-				<Route element={<AdminRoute />}>
-					<Route element={<Dashboard />} path="/dashboard" />
-				</Route>
+				<Route element={<Dashboard />} path="/dashboard" />
 				<Route path="*" element={<SignIn />} />
 			</Routes>
 		</BrowserRouter>

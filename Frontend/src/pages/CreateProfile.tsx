@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../styles/form.css";
 import { useNavigate } from "react-router-dom";
 
@@ -88,7 +88,7 @@ export default function CreateProfile() {
 				const data = await response.json();
 				localStorage.setItem("jwsToken", data.token);
 				navigate("/user");
-			} else if (response.status == 400) {
+			} else {
 				const data = await response.json();
 				setFormError({ serverError: data.error });
 			}
@@ -133,7 +133,7 @@ export default function CreateProfile() {
 								</label>
 							</section>
 							{formError?.username && (
-								<p className="text-red-500">{formError.username}</p>
+								<p className="text-red-500 text-sm">{formError.username}</p>
 							)}
 						</section>
 
@@ -157,7 +157,7 @@ export default function CreateProfile() {
 								</label>
 							</section>
 							{formError?.email && (
-								<p className="text-red-500">{formError.email}</p>
+								<p className="text-red-500 text-sm">{formError.email}</p>
 							)}
 						</section>
 
@@ -181,7 +181,7 @@ export default function CreateProfile() {
 								</label>
 							</section>
 							{formError?.password && (
-								<p className="text-red-500">{formError.password}</p>
+								<p className="text-red-500 text-sm">{formError.password}</p>
 							)}
 						</section>
 
@@ -205,7 +205,9 @@ export default function CreateProfile() {
 								</label>
 							</section>
 							{formError?.repeatPassword && (
-								<p className="text-red-500">{formError.repeatPassword}</p>
+								<p className="text-red-500 text-sm">
+									{formError.repeatPassword}
+								</p>
 							)}
 						</section>
 
@@ -216,7 +218,7 @@ export default function CreateProfile() {
 							{isLoading ? <>Loading</> : <>Submit</>}
 						</button>
 						{formError?.serverError && (
-							<p className="text-red-500 text-center">
+							<p className="text-red-500 text-center text-sm">
 								{formError.serverError}
 							</p>
 						)}

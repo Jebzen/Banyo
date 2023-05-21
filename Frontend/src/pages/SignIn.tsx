@@ -28,6 +28,7 @@ export default function SignIn() {
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
+		setIsLoading(true);
 		let errors = {};
 
 		/* Client Validation Start */
@@ -42,10 +43,12 @@ export default function SignIn() {
 			errors = { ...errors, repeatPassword: "Password not correct" };
 		}
 
-		if (errors) {
+		if (Object.keys(errors).length != 0) {
+			setIsLoading(false);
 			setFormError({
 				...errors,
 			});
+			return;
 		}
 		/* Client Validation End */
 
@@ -60,8 +63,12 @@ export default function SignIn() {
 			if (response.ok) {
 				const data = await response.json();
 				localStorage.setItem("jwsToken", data.token);
+				if (data.user.username.toLowerCase() === "admin") {
+					navigate("/dashboard");
+					return;
+				}
 				navigate("/user");
-			} else if (response.status == 400) {
+			} else {
 				const data = await response.json();
 				setFormError({ serverError: data.error });
 			}
@@ -89,7 +96,7 @@ export default function SignIn() {
 								placeholder="Username"
 								id="username"
 								name="username"
-								value={formData.username}
+								value={username}
 								onChange={handleChange}
 								className="p-5 border-2 rounded-md border-solid flex w-full"
 							/>
@@ -101,7 +108,7 @@ export default function SignIn() {
 							</label>
 						</section>
 						{formError?.username && (
-							<p className="text-red-500">{formError.username}</p>
+							<p className="text-red-500 text-sm">{formError.username}</p>
 						)}
 					</section>
 
@@ -109,11 +116,11 @@ export default function SignIn() {
 					<section className="mb-10">
 						<section className="relative input-section">
 							<input
-								type="text"
+								type="password"
 								placeholder="Password"
 								id="password"
 								name="password"
-								value={formData.password}
+								value={password}
 								onChange={handleChange}
 								className="p-5 border-2 rounded-md border-solid flex w-full"
 							/>
@@ -133,7 +140,9 @@ export default function SignIn() {
 						{isLoading ? <>Loading</> : <>Submit</>}
 					</button>
 					{formError?.serverError && (
-						<p className="text-red-500 text-center">{formError.serverError}</p>
+						<p className="text-red-500 text-center text-sm mt-3">
+							{formError.serverError}
+						</p>
 					)}
 				</section>
 				<section className="text-center mt-5 text-xs text-gray-500">

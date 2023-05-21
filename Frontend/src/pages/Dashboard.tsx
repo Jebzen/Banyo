@@ -1,9 +1,9 @@
 import "../styles/dashboard.css";
 import deleteIcon from "../assets/deleteIcon.svg";
 import { useEffect, useState } from "react";
-import { Iuser } from "../utils/Iuser";
+import AdminRoute from "../utils/AdminRoute";
 
-export default function Dashboard() {
+function Dashboard() {
 	const [userList, setUserList] = useState<any>([]);
 
 	useEffect(() => {
@@ -62,3 +62,5 @@ export default function Dashboard() {
 		</main>
 	);
 }
+
+export default AdminRoute(Dashboard);

@@ -1,31 +1,32 @@
-//taken from https://github.com/divanov11/React-router-v6-protected-routes/blob/master/src/utils/PrivateRoutes.js
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import checkToken from "./CheckToken";
 
-const AdminRoute = () => {
-	const apiUrl = import.meta.env.VITE_BACKEND_PATH;
-	//console.log("Private Route");
+const AdminRoute = (WrappedComponent: any) => {
+	return () => {
+		const [isAuthenticated, setIsAuthenticated] = useState<any>(false);
+		const [isLoading, setIsLoading] = useState(true);
 
-	const jwsToken = localStorage.getItem("jwstoken");
+		useEffect(() => {
+			checkToken().then((isAuthenticated) => {
+				setIsAuthenticated(isAuthenticated);
+				setIsLoading(false);
+			});
+		}, []);
 
-	//TO DO, token security
-	if (jwsToken === null) {
-		return <Navigate to="/login" />;
-	}
+		if (isLoading) {
+			return <div>Loading...</div>;
+		}
 
-	fetch(apiUrl + "/user")
-		.then((response) => {
-			if (response.ok) {
-				return response.json();
-			} else {
-				return <Navigate to="/login" />;
-			}
-		})
-		.then((data) => {
-			if (data.user.username !== "ADMIN") {
-				return <Outlet />;
-			}
+		if (
+			!isAuthenticated ||
+			isAuthenticated?.user?.username.toLowerCase() !== "admin"
+		) {
 			return <Navigate to="/login" />;
-		});
+		}
+
+		return <WrappedComponent />;
+	};
 };
 
 export default AdminRoute;

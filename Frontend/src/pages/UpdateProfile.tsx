@@ -150,7 +150,7 @@ export default function UpdateProfile() {
 								</label>
 							</section>
 							{formError?.username && (
-								<p className="text-red-500">{formError.username}</p>
+								<p className="text-red-500 text-sm">{formError.username}</p>
 							)}
 						</section>
 
@@ -162,7 +162,7 @@ export default function UpdateProfile() {
 									placeholder="Email"
 									id="email"
 									name="email"
-									value={formData.email}
+									value={email}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
@@ -174,7 +174,7 @@ export default function UpdateProfile() {
 								</label>
 							</section>
 							{formError?.email && (
-								<p className="text-red-500">{formError.email}</p>
+								<p className="text-red-500 text-sm">{formError.email}</p>
 							)}
 						</section>
 
@@ -186,7 +186,7 @@ export default function UpdateProfile() {
 									placeholder="Old Password"
 									id="oldpassword"
 									name="oldpassword"
-									value={formData.oldpassword}
+									value={oldpassword}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
@@ -198,7 +198,7 @@ export default function UpdateProfile() {
 								</label>
 							</section>
 							{formError?.oldpassword && (
-								<p className="text-red-500">{formError.oldpassword}</p>
+								<p className="text-red-500 text-sm">{formError.oldpassword}</p>
 							)}
 						</section>
 
@@ -210,7 +210,7 @@ export default function UpdateProfile() {
 									placeholder="New Password"
 									id="newpassword"
 									name="newpassword"
-									value={formData.newpassword}
+									value={newpassword}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
@@ -222,7 +222,7 @@ export default function UpdateProfile() {
 								</label>
 							</section>
 							{formError?.newpassword && (
-								<p className="text-red-500">{formError.newpassword}</p>
+								<p className="text-red-500 text-sm">{formError.newpassword}</p>
 							)}
 						</section>
 
@@ -246,7 +246,9 @@ export default function UpdateProfile() {
 								</label>
 							</section>
 							{formError?.repeatPassword && (
-								<p className="text-red-500">{formError.repeatPassword}</p>
+								<p className="text-red-500 text-sm">
+									{formError.repeatPassword}
+								</p>
 							)}
 						</section>
 
@@ -257,7 +259,7 @@ export default function UpdateProfile() {
 							{isLoading ? "Loading..." : "Submit"}
 						</button>
 						{formError?.serverError && (
-							<p className="text-red-500 text-center">
+							<p className="text-red-500 text-center text-sm">
 								{formError.serverError}
 							</p>
 						)}

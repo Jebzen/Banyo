@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/form.css";
 import PrivateRoute from "../utils/PrivateRoute";
 import { useEffect, useState } from "react";
