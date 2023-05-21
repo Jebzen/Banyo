@@ -7,9 +7,3 @@ Frontend:
     Login with said user + Fail
     See user profile
     Update user + See user profile
-
-  Responsive Design:
-    Sign in
-    Create
-    Update
-    User Profile

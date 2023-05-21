@@ -1,6 +1,5 @@
 form.form-section {
 	background-color: var(--white);
-	padding: 60px 46px 73px 46px;
 }
 
 .input-section input {
@@ -28,6 +27,12 @@ form.form-section {
 	outline: none;
 }
 
+@media (min-width: 768px) {
+	.grid-profile {
+		grid-template-columns: 1fr auto;
+	}
+}
+
 .grid-profile {
-	grid-template-columns: 1fr auto;
+	grid-template-columns: 1fr;
 }

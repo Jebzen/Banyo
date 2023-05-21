@@ -123,9 +123,9 @@ export default function UpdateProfile() {
 			<main className="flex justify-center min-h-screen bg-light-grey">
 				<form
 					onSubmit={handleSubmit}
-					className="h-fit rounded-lg self-center form-section"
+					className="h-fit md:rounded-lg self-center form-section p-5 md:px-11 md:pt-16 md:pb-20 w-full md:w-fit flex flex-col justify-center"
 				>
-					<section className="flex flex-col w-80">
+					<section className="flex flex-col justify-center w-fit mx-auto">
 						<h1 className="font-bold text-2xl mb-12 text-center">
 							Update Profile
 						</h1>
@@ -266,7 +266,7 @@ export default function UpdateProfile() {
 					</section>
 
 					<section className="text-center mt-5 text-xs text-gray-500">
-						<a href={"/user/" + username} className="underline">
+						<a href={"/user/"} className="underline">
 							Go back
 						</a>
 					</section>
