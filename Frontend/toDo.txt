@@ -2,6 +2,9 @@ Backend:
   PHP Test?
 
 Frontend:
+  Client to backend check:
+    Around router url check
+
   Determine cypress tests:
     Create an user + Fail
     Login with said user + Fail

@@ -111,6 +111,11 @@ class UserController{
     $password = hashPassword($requestData['password']);
     $email = $requestData['email'];
 
+    //If username is admin
+    if(strtolower($username) == "admin"){
+      jsonResponse(['error' => 'Username cannot be Admin'], 400);
+    }
+
     //Save the dateTime now
     $dateTime = new DateTime("now");
     $dateTimeFormatted = $dateTime->format('Y-m-d H:i:s');
@@ -193,6 +198,11 @@ class UserController{
     $email = $requestData['email'];
     $oldpassword = hashPassword($requestData['oldpassword']);
     $newpassword = hashPassword($requestData['newpassword']);
+    
+    //If username is admin
+    if(strtolower($username) == "admin"){
+      jsonResponse(['error' => 'Username cannot be Admin'], 400);
+    }
     
     // Check if the user has indeed correct information
     $stmt = $db->prepare('SELECT user_id FROM users WHERE user_id = :user_id AND password = :password');

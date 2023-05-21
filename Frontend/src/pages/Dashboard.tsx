@@ -85,6 +85,12 @@ function Dashboard() {
 						);
 					})}
 				</section>
+				<section className="text-center mt-5 text-xs text-gray-500">
+					<span>Go </span>
+					<a href="/login" className="underline">
+						Back
+					</a>
+				</section>
 			</section>
 		</main>
 	);

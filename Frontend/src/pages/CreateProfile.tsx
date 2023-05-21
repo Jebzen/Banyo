@@ -42,7 +42,7 @@ export default function CreateProfile() {
 
 		/*Client Validation Start */
 		//Username invalid
-		if (username.toLowerCase() === "admin" || username.length < 1) {
+		if (username.length < 1) {
 			errors = { ...errors, username: "Username invalid" };
 		}
 

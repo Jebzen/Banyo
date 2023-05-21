@@ -57,7 +57,7 @@ export default function UpdateProfile() {
 		/* Client Validation Start */
 
 		//Username invalid
-		if (username.toLowerCase() === "admin" || username.length < 1) {
+		if (username.length < 1) {
 			errors = { ...errors, username: "Username invalid" };
 		}
 
@@ -83,6 +83,7 @@ export default function UpdateProfile() {
 		}
 
 		if (Object.keys(errors).length != 0) {
+			setIsLoading(false);
 			setFormError({
 				...errors,
 			});
@@ -101,13 +102,12 @@ export default function UpdateProfile() {
 				body: JSON.stringify(formData),
 			});
 
+			const data = await response.json();
+
 			if (response.ok) {
-				const data = await response.json();
-				if (data.error) {
-					setFormError({ serverError: data.error });
-				} else {
-					navigate("/user");
-				}
+				navigate("/user");
+			} else {
+				setFormError({ serverError: data.error });
 			}
 		} catch (error) {
 			console.error("Error during login:", error);
@@ -182,7 +182,7 @@ export default function UpdateProfile() {
 						<section className="mb-4">
 							<section className="relative input-section">
 								<input
-									type="text"
+									type="password"
 									placeholder="Old Password"
 									id="oldpassword"
 									name="oldpassword"
@@ -206,7 +206,7 @@ export default function UpdateProfile() {
 						<section className="mb-4">
 							<section className="relative input-section">
 								<input
-									type="text"
+									type="password"
 									placeholder="New Password"
 									id="newpassword"
 									name="newpassword"
@@ -230,7 +230,7 @@ export default function UpdateProfile() {
 						<section className="mb-10">
 							<section className="relative input-section">
 								<input
-									type="text"
+									type="password"
 									placeholder="Repeat New Password"
 									id="repeatPassword"
 									name="repeatPassword"

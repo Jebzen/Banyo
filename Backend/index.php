@@ -40,6 +40,8 @@ $routes = [
     '/users' => 'UserController@getAllUsers',
     //All user details from JWS
     '/user' => 'UserController@getUser',
+    //Initiate
+    '/init' => 'InitController@start',
   ],
   'POST' => [
     //Create new user
