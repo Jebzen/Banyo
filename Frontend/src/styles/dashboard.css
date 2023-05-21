@@ -1,16 +1,43 @@
 .dashboard {
-	min-width: 500px;
+	min-width: 100%;
+	padding: 1.25rem;
 }
 
-@media (min-width: 800px) {
-	.dashboard {
-		min-width: 750px;
-	}
-}
-
-header,
 .user-list > section {
-	grid-template-columns: 262px 340px 72px;
+	grid-template-columns: 1fr auto;
+	grid-template-rows: 1fr 1fr;
+	grid-template-areas:
+		"username-text deleteIcon"
+		"email-text deleteIcon";
+}
+
+.user-list > section > .username-text {
+	grid-area: username-text;
+}
+.user-list > section > .email-text {
+	grid-area: email-text;
+}
+.user-list > section > .deleteIcon {
+	grid-area: deleteIcon;
+	align-items: center;
+	display: flex;
+}
+
+@media (min-width: 768px) {
+	.dashboard {
+		min-width: 750px !important;
+		padding: 0;
+	}
+
+	header,
+	.user-list > section {
+		grid-template-columns: 262px 340px 72px !important;
+		grid-template-rows: 1fr;
+		grid-template-areas: "username-text email-text deleteIcon";
+	}
+	.user-list > section > * {
+		grid-area: none;
+	}
 }
 
 .deleteIcon:hover {

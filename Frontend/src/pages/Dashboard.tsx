@@ -48,10 +48,10 @@ function Dashboard() {
 
 	return (
 		<main className="flex justify-center min-h-screen bg-light-grey">
-			<section className="h-fit rounded-lg self-center dashboard ">
+			<section className="h-fit rounded-lg self-center dashboard flex flex-col">
 				<h1 className="font-bold text-2xl mb-10">Users</h1>
 
-				<header className="grid gap-x-5 text-xs px-5 mb-3">
+				<header className="gap-x-5 text-xs px-5 mb-3 hidden md:grid">
 					<p>Name</p>
 					<p>Email</p>
 					<p>Delete</p>
@@ -64,8 +64,8 @@ function Dashboard() {
 								key={index}
 								className="p-5 bg-white grid gap-x-5 mb-1 rounded text-sm leading-6"
 							>
-								<span className="font-bold">{data.username}</span>
-								<span>{data.email}</span>
+								<span className="username-text font-bold">{data.username}</span>
+								<span className="email-text">{data.email}</span>
 								{data.user_id == "1" ||
 								data.username.toLowerCase() == "admin" ? (
 									<span className="deleteIcon px-2 hover:text-red-600 w-fit cursor-not-allowed">
