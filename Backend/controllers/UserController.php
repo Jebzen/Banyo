@@ -17,6 +17,45 @@ class UserController{
     jsonResponse($users);
   }
 
+  public function getUser(){
+    //Jws bearer token
+    $AuthToken = identifyAuthBearer();
+
+    //If auth bearer true!
+    if(!$AuthToken[0]){
+      jsonResponse(['error' => $AuthToken[1]], 400);
+    }
+
+    //Decode the token
+    $TokenData = decodeJws(($AuthToken[1]));
+
+    //If token expired
+    $dateTime = new DateTime();
+    if(!isset($TokenData[1]->dateTime)){
+      jsonResponse(['error' => "No DateTime in token"], 400);
+    }
+    $tokenDateTime = new DateTime($TokenData[1]->dateTime);
+    if($tokenDateTime < $dateTime){
+      jsonResponse(['error' => "Token expired"], 400);
+    }
+    
+    // Check if the username and email already exist on another user
+    $db = getDbConnection();
+    $stmt = $db->prepare('SELECT user_id, username, email, created_at, updated_at FROM users WHERE user_id = :user_id ');
+    $stmt->bindParam(':user_id', $TokenData[1]->user_id);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // If the user is found, return it as a JSON response
+    if ($user) {
+      jsonResponse(['message' => 'User successfully found', 'user' => $user]);
+    } else {
+      // If the user is not found, return an error response
+      jsonResponse(['error' => 'Unauthorized access'], 401);
+    }
+
+  }
+
   public function getUserJws($params){
     // Retrieve the request body
     $requestData = json_decode(file_get_contents('php://input'), true);
@@ -32,7 +71,7 @@ class UserController{
     
     //Search db for user & password
     $db = getDbConnection();
-    $stmt = $db->prepare('SELECT user_id, username, email FROM users WHERE username = :username AND password = :password');
+    $stmt = $db->prepare('SELECT user_id, username, email, created_at, updated_at FROM users WHERE username = :username AND password = :password');
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':password', $password);
 
@@ -43,7 +82,7 @@ class UserController{
     // If the user is found, return it as a JSON response
     if ($user) {
       $data = new tokenizer($user['user_id']);
-      jsonResponse(encodeJws($data));
+      jsonResponse(['message' => 'User successfully found', 'token' => encodeJws($data), 'user' => $user]);
     } else {
       // If the user is not found, return an error response
       jsonResponse(['error' => 'Unauthorized access'], 401);

@@ -33,6 +33,8 @@ $routes = [
   'GET' => [
     //All users
     '/users' => 'UserController@getAllUsers',
+    //All user details from JWS
+    '/user' => 'UserController@getUser',
   ],
   'POST' => [
     //Create new user
