@@ -88,7 +88,7 @@ class UserController{
     //Execute and check
     $result = $stmt->execute();
     if ($result && $stmt->rowCount() > 0) {
-      jsonResponse(['error' => 'User already exists'], 400);
+      jsonResponse(['error' => 'Username or email already exists'], 400);
     }
       
     // Insert the new user into the database
@@ -108,7 +108,7 @@ class UserController{
 
       //Make token from id and return token
       $data = new tokenizer($db->lastInsertId());
-      jsonResponse(encodeJws($data));
+      jsonResponse(['message'=>'User created successfully','token'=>encodeJws($data)]);
     } else {
       // Failed to insert user
       jsonResponse(['error' => 'Failed to create user'], 400);

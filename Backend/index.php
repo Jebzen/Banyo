@@ -2,9 +2,11 @@
 //From internet?
 declare(strict_types=1);
 
+// Enable CORS
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header("Access-Control-Allow-Headers: *");
+header('Content-Type: application/json');
 //header('Content-Type: application/json');
 
 use Firebase\JWT\JWT;

@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/form.css";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProfile() {
+	const navigate = useNavigate();
+
+	const apiUrl = import.meta.env.VITE_BACKEND_PATH;
+
+	const [isLoading, setIsLoading] = useState(false);
+
 	const [formData, setFormData] = useState({
 		username: "",
 		email: "",
 		password: "",
 		repeatPassword: "",
+		serverError: "",
 	});
 
 	const [formError, setFormError] = useState<any>({});
@@ -19,35 +27,30 @@ export default function CreateProfile() {
 			...formData,
 			[e.target.name]: e.target.value,
 		});
+
+		//Only delete relevant errors
+		let erros = formError;
+		delete erros[e.target.name];
+		setFormError(erros);
 	};
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
+		setIsLoading(true);
+		setFormError({});
 		let errors = {};
 
-		/*Validation Start */
-
+		/*Client Validation Start */
 		//Username invalid
 		if (username.toLowerCase() === "admin" || username.length < 1) {
 			errors = { ...errors, username: "Username invalid" };
-		}
-
-		//Username already taken
-		if (!true) {
-			errors = { ...errors, username: "Username already taken" };
 		}
 
 		//Email invalid
 		//Regex with help from https://regex101.com/
 		const emailPattern = /^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-Z]{2,}$/i;
 		if (!email.match(emailPattern)) {
-			console.log("email");
-			errors = { ...errors, email: "Email not valid" };
-		}
-
-		//Email already taken
-		if (!true) {
-			errors = { ...errors, email: "Email already taken" };
+			errors = { ...errors, email: "Email invalid" };
 		}
 
 		//Password not strong enough
@@ -64,12 +67,40 @@ export default function CreateProfile() {
 			errors = { ...errors, repeatPassword: "Passwords not the same" };
 		}
 
-		if (errors) {
+		if (Object.keys(errors).length != 0) {
+			setIsLoading(false);
 			setFormError({
 				...errors,
 			});
+			return;
 		}
-		/*Validation End */
+		/*Client Validation End */
+
+		/*Server Validation Start */
+
+		try {
+			const response = await fetch(apiUrl + "/users/create", {
+				method: "POST",
+				body: JSON.stringify(formData),
+			});
+
+			console.log(response);
+
+			if (response.ok) {
+				const data = await response.json();
+				localStorage.setItem("jwstoken", data.token);
+				navigate("/user");
+			} else if (response.status == 400) {
+				const data = await response.json();
+				setFormError({ serverError: data.error });
+			}
+		} catch (error) {
+			console.error("Error during login:", error);
+		}
+
+		/*Server Validation End */
+
+		setIsLoading(false);
 	};
 
 	return (
@@ -136,7 +167,7 @@ export default function CreateProfile() {
 						<section className="mb-4">
 							<section className="relative input-section">
 								<input
-									type="text"
+									type="password"
 									placeholder="Password"
 									id="password"
 									name="password"
@@ -160,7 +191,7 @@ export default function CreateProfile() {
 						<section className="mb-10">
 							<section className="relative input-section">
 								<input
-									type="text"
+									type="password"
 									placeholder="Repeat Password"
 									id="repeatPassword"
 									name="repeatPassword"
@@ -180,9 +211,17 @@ export default function CreateProfile() {
 							)}
 						</section>
 
-						<button className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime btn hover:bg-blue-600 focus-within:bg-blue-600">
-							Submit
+						<button
+							disabled={isLoading}
+							className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime btn hover:bg-blue-600 focus-within:bg-blue-600 disabled:bg-slate-700"
+						>
+							{isLoading ? <>Loading</> : <>Submit</>}
 						</button>
+						{formError?.serverError && (
+							<p className="text-red-500 text-center">
+								{formError.serverError}
+							</p>
+						)}
 					</section>
 
 					<section className="text-center mt-5 text-xs text-gray-500">

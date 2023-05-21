@@ -1,7 +1,6 @@
 Backend:
   API:
-    Read user based on username, email or jwstoken
-    Delete user based on Admin JWS token
+    Get userdata from JWS
 
 Frontend:
   Set up proper jws security check
