@@ -1,21 +1,39 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import checkToken from "../utils/CheckToken";
 import "../styles/form.css";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateProfile() {
-	const { username } = useParams();
+	const apiUrl = import.meta.env.VITE_BACKEND_PATH;
+	const token = localStorage.getItem("jwsToken");
+
+	const navigate = useNavigate();
 
 	const [formData, setFormData] = useState({
-		user: username ? username : "",
+		username: "",
 		email: "",
 		oldpassword: "",
 		newpassword: "",
 		repeatPassword: "",
 	});
+	const [isLoading, setIsLoading] = useState(false);
 
 	const [formError, setFormError] = useState<any>({});
 
-	const { user, email, oldpassword, newpassword, repeatPassword } = formData;
+	const { username, email, oldpassword, newpassword, repeatPassword } =
+		formData;
+
+	useEffect(() => {
+		checkToken().then((isAuthenticated: any) => {
+			if (isAuthenticated && isAuthenticated.user) {
+				setFormData({
+					...formData,
+					username: isAuthenticated.user.username,
+					email: isAuthenticated.user.email,
+				});
+			}
+		});
+	}, []);
 
 	//Handle change event for all Inputs
 	const handleChange = (e: any) => {
@@ -23,40 +41,31 @@ export default function UpdateProfile() {
 			...formData,
 			[e.target.name]: e.target.value,
 		});
+
+		//Only delete relevant errors
+		let erros = formError;
+		delete erros[e.target.name];
+		setFormError(erros);
 	};
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
+		setFormError({});
+		setIsLoading(true);
 		let errors = {};
 
-		/*Validation Start */
+		/* Client Validation Start */
 
 		//Username invalid
-		if (user.toLowerCase() === "admin" || user.length < 1) {
+		if (username.toLowerCase() === "admin" || username.length < 1) {
 			errors = { ...errors, username: "Username invalid" };
-		}
-
-		//Username already taken
-		if (!true) {
-			errors = { ...errors, username: "Username already taken" };
 		}
 
 		//Email invalid
 		//Regex with help from https://regex101.com/
 		const emailPattern = /^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-Z]{2,}$/i;
 		if (!email.match(emailPattern)) {
-			console.log("email");
 			errors = { ...errors, email: "Email not valid" };
-		}
-
-		//Email already taken
-		if (!true) {
-			errors = { ...errors, email: "Email already taken" };
-		}
-
-		//Not old password
-		if (!oldpassword) {
-			errors = { ...errors, oldpassword: "Not current password" };
 		}
 
 		//Password not strong enough
@@ -73,13 +82,40 @@ export default function UpdateProfile() {
 			errors = { ...errors, repeatPassword: "Passwords not the same" };
 		}
 
-		if (errors) {
+		if (Object.keys(errors).length != 0) {
 			setFormError({
 				...errors,
 			});
 			return;
 		}
-		/*Validation End */
+		/*Client Validation End */
+
+		/*Server Validation Start */
+
+		try {
+			const response = await fetch(apiUrl + "/users", {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(formData),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				if (data.error) {
+					setFormError({ serverError: data.error });
+				} else {
+					navigate("/user");
+				}
+			}
+		} catch (error) {
+			console.error("Error during login:", error);
+		} finally {
+			setIsLoading(false);
+		}
+
+		/*Server Validation End */
 	};
 
 	return (
@@ -102,7 +138,7 @@ export default function UpdateProfile() {
 									placeholder="Username"
 									id="username"
 									name="username"
-									value={user}
+									value={username}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
@@ -147,18 +183,18 @@ export default function UpdateProfile() {
 							<section className="relative input-section">
 								<input
 									type="text"
-									placeholder="Password"
-									id="password"
-									name="password"
+									placeholder="Old Password"
+									id="oldpassword"
+									name="oldpassword"
 									value={formData.oldpassword}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
 								<label
-									htmlFor="password"
+									htmlFor="oldpassword"
 									className="absolute left-0 items-center flex cursor-text ms-5 p-px ease-out duration-75 top-2/4"
 								>
-									Password
+									Old Password
 								</label>
 							</section>
 							{formError?.oldpassword && (
@@ -171,18 +207,18 @@ export default function UpdateProfile() {
 							<section className="relative input-section">
 								<input
 									type="text"
-									placeholder="Password"
-									id="password"
-									name="password"
+									placeholder="New Password"
+									id="newpassword"
+									name="newpassword"
 									value={formData.newpassword}
 									onChange={handleChange}
 									className="p-5 border-2 rounded-md border-solid flex w-full"
 								/>
 								<label
-									htmlFor="password"
+									htmlFor="newpassword"
 									className="absolute left-0 items-center flex cursor-text ms-5 p-px ease-out duration-75 top-2/4"
 								>
-									Password
+									New Password
 								</label>
 							</section>
 							{formError?.newpassword && (
@@ -195,7 +231,7 @@ export default function UpdateProfile() {
 							<section className="relative input-section">
 								<input
 									type="text"
-									placeholder="Repeat Password"
+									placeholder="Repeat New Password"
 									id="repeatPassword"
 									name="repeatPassword"
 									value={formData.repeatPassword}
@@ -206,7 +242,7 @@ export default function UpdateProfile() {
 									htmlFor="repeatPassword"
 									className="absolute left-0 items-center flex cursor-text ms-5 p-px ease-out duration-75 top-2/4"
 								>
-									Repeat Password
+									Repeat New Password
 								</label>
 							</section>
 							{formError?.repeatPassword && (
@@ -214,13 +250,21 @@ export default function UpdateProfile() {
 							)}
 						</section>
 
-						<button className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime btn hover:bg-blue-600 focus-within:bg-blue-600">
-							Submit
+						<button
+							disabled={isLoading}
+							className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime btn hover:bg-blue-600 focus-within:bg-blue-600"
+						>
+							{isLoading ? "Loading..." : "Submit"}
 						</button>
+						{formError?.serverError && (
+							<p className="text-red-500 text-center">
+								{formError.serverError}
+							</p>
+						)}
 					</section>
 
 					<section className="text-center mt-5 text-xs text-gray-500">
-						<a href={"/user/" + user} className="underline">
+						<a href={"/user/" + username} className="underline">
 							Go back
 						</a>
 					</section>

@@ -184,14 +184,24 @@ class UserController{
     $requestData = json_decode(file_get_contents('php://input'), true);
     
     //Needs username, password and email in body
-    if(!isset($requestData['username']) || !isset($requestData['password']) || !isset($requestData['email'])){
-      jsonResponse(['error' => 'Username, Password or Email Not Set'], 400);
+    if(!isset($requestData['username']) || !isset($requestData['newpassword']) || !isset($requestData['email']) || !isset($requestData['oldpassword'])){
+      jsonResponse(['error' => 'Username, New Password, Old Password or Email Not Set'], 400);
     }
 
     //Set variables
     $username = $requestData['username'];
     $email = $requestData['email'];
-    $password = hashPassword($requestData['password']);
+    $oldpassword = hashPassword($requestData['oldpassword']);
+    $newpassword = hashPassword($requestData['newpassword']);
+    
+    // Check if the user has indeed correct information
+    $stmt = $db->prepare('SELECT user_id FROM users WHERE user_id = :user_id AND password = :password');
+    $stmt->bindParam(':password', $oldpassword);
+    $stmt->bindParam(':user_id', $TokenData[1]->user_id);
+    $stmt->execute();
+    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+      jsonResponse(['error' => 'Incorrect user information']);
+    }
     
     // Check if the username and email already exist on another user
     $stmt = $db->prepare('SELECT user_id FROM users WHERE (username = :username OR email = :email) AND NOT user_id = :user_id');
@@ -202,17 +212,17 @@ class UserController{
 
     // If a user with the same username or email already exists, return an error
     if ($stmt->fetch(PDO::FETCH_ASSOC)) {
-      jsonResponse(['error' => 'Username or email already exists']);
+      jsonResponse(['error' => 'Username or Email already exists']);
     }
 
     //Update user prepare
-    $stmt = $db->prepare('UPDATE users SET username = :username, email = :email, password = :password, updated_at = :updated_at WHERE user_id = :user_id');
+    $stmt = $db->prepare('UPDATE users SET username = :username, email = :email, password = :newpassword, updated_at = :updated_at WHERE user_id = :user_id');
 
     //Bind data
     $format = $dateTime->format('Y-m-d H:i:s');
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':password', $password);
+    $stmt->bindParam(':newpassword', $newpassword);
     $stmt->bindParam(':updated_at', $format);
     $stmt->bindParam(':user_id', $TokenData[1]->user_id);
     

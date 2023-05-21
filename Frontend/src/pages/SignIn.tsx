@@ -1,7 +1,14 @@
 import { useState } from "react";
 import "../styles/form.css";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
+	const navigate = useNavigate();
+
+	const apiUrl = import.meta.env.VITE_BACKEND_PATH;
+
+	const [isLoading, setIsLoading] = useState(false);
+
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
@@ -19,11 +26,11 @@ export default function SignIn() {
 		});
 	};
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		let errors = {};
 
-		/*Validation Start */
+		/* Client Validation Start */
 
 		//Username not found
 		if (!true && username) {
@@ -40,7 +47,29 @@ export default function SignIn() {
 				...errors,
 			});
 		}
-		/*Validation End */
+		/* Client Validation End */
+
+		/*Server Validation Start */
+
+		try {
+			const response = await fetch(apiUrl + "/users/login", {
+				method: "POST",
+				body: JSON.stringify(formData),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				localStorage.setItem("jwsToken", data.token);
+				navigate("/user");
+			} else if (response.status == 400) {
+				const data = await response.json();
+				setFormError({ serverError: data.error });
+			}
+		} catch (error) {
+			console.error("Error during login:", error);
+		}
+
+		/*Server Validation End */
 	};
 
 	return (
@@ -101,8 +130,11 @@ export default function SignIn() {
 					</section>
 
 					<button className="text-white font-bold rounded-full justify-center py-5 w-100 bg-blue-prime btn hover:bg-blue-600 focus-within:bg-blue-600">
-						Log in
+						{isLoading ? <>Loading</> : <>Submit</>}
 					</button>
+					{formError?.serverError && (
+						<p className="text-red-500 text-center">{formError.serverError}</p>
+					)}
 				</section>
 				<section className="text-center mt-5 text-xs text-gray-500">
 					<span>Need an account? </span>

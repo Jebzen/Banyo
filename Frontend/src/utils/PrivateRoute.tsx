@@ -9,7 +9,6 @@ const PrivateRoute = (WrappedComponent: any) => {
 
 		useEffect(() => {
 			checkToken().then((isAuthenticated) => {
-				console.log(isAuthenticated);
 				setIsAuthenticated(isAuthenticated);
 				setIsLoading(false);
 			});
