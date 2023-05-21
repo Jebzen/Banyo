@@ -2,28 +2,48 @@ import "../styles/dashboard.css";
 import deleteIcon from "../assets/deleteIcon.svg";
 import { useEffect, useState } from "react";
 import AdminRoute from "../utils/AdminRoute";
+import { Iuser } from "../utils/Iuser";
 
 function Dashboard() {
+	const token = localStorage.getItem("jwsToken");
 	const [userList, setUserList] = useState<any>([]);
 
 	useEffect(() => {
 		fetch("http://localhost/Banyo/Backend/users")
 			.then((response) => {
 				if (response.ok) return response.json();
-				return null;
+				throw new Error("Bad response");
 			})
 			.then((data) => {
-				// Process the received JSON data
 				setUserList(data);
 			})
 			.catch((error) => {
-				// Handle any errors that occur during the fetch request
 				console.error("Error:", error);
 			});
 	}, []);
 
 	function DeleteProfile(id: number) {
-		console.log(id);
+		fetch("http://localhost/Banyo/Backend/users/" + id, {
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+			.then((response) => {
+				if (response.ok) return response.json();
+				throw new Error("Bad response");
+			})
+			.then((data) => {
+				const newList = userList.filter((user: Iuser) => {
+					return user.user_id != id;
+				});
+				if (data.message) {
+					setUserList(newList);
+				}
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
 	}
 
 	return (
@@ -46,14 +66,21 @@ function Dashboard() {
 							>
 								<span className="font-bold">{data.username}</span>
 								<span>{data.email}</span>
-								<span
-									className="deleteIcon px-2 hover:text-red-600 cursor-pointer w-fit"
-									onClick={() => {
-										DeleteProfile(data.user_id);
-									}}
-								>
-									<img src={deleteIcon} alt="Delete Icon" />
-								</span>
+								{data.user_id == "1" ||
+								data.username.toLowerCase() == "admin" ? (
+									<span className="deleteIcon px-2 hover:text-red-600 w-fit cursor-not-allowed">
+										<img src={deleteIcon} alt="Delete Icon" />
+									</span>
+								) : (
+									<span
+										className="deleteIcon px-2 hover:text-red-600 cursor-pointer w-fit"
+										onClick={() => {
+											DeleteProfile(data.user_id);
+										}}
+									>
+										<img src={deleteIcon} alt="Delete Icon" />
+									</span>
+								)}
 							</section>
 						);
 					})}
