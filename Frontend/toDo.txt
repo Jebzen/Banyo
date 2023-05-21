@@ -1,4 +1,5 @@
 Backend:
+  PHP Test?
 
 Frontend:
   Determine cypress tests:
@@ -6,8 +7,9 @@ Frontend:
     Login with said user + Fail
     See user profile
     Update user + See user profile
-  
-  Only access to dashboard with admintoken
-    Dashboard:
-      Data
-      Security
+
+  Responsive Design:
+    Sign in
+    Create
+    Update
+    User Profile
