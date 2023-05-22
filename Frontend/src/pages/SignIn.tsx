@@ -34,13 +34,13 @@ export default function SignIn() {
 		/* Client Validation Start */
 
 		//Username not found
-		if (!true && username) {
-			errors = { ...errors, username: "Username not found" };
+		if (username.length < 1) {
+			errors = { ...errors, username: "Username invalid" };
 		}
 
 		//Password not correct
-		if (!true && password) {
-			errors = { ...errors, repeatPassword: "Password not correct" };
+		if (password.length < 4) {
+			errors = { ...errors, password: "Password not correct" };
 		}
 
 		if (Object.keys(errors).length != 0) {
@@ -69,10 +69,12 @@ export default function SignIn() {
 				}
 				navigate("/user");
 			} else {
+				setIsLoading(false);
 				const data = await response.json();
 				setFormError({ serverError: data.error });
 			}
 		} catch (error) {
+			setIsLoading(false);
 			console.error("Error during login:", error);
 		}
 
@@ -132,7 +134,7 @@ export default function SignIn() {
 							</label>
 						</section>
 						{formError?.password && (
-							<p className="text-red-500">{formError.password}</p>
+							<p className="text-red-500 text-sm">{formError.password}</p>
 						)}
 					</section>
 

@@ -44,7 +44,7 @@ function UserProfile() {
 					</h1>
 					<section className="grid grid-profile gap-y-6">
 						<span className="font-bold text-sm">Email</span>
-						<span className="text-sm">
+						<span className="text-sm email-text">
 							{isLoading ? "Loading..." : userData.email}
 						</span>
 						<span className="font-bold text-sm">Password</span>

@@ -4,6 +4,4 @@ Backend:
 Frontend:
 
   Determine cypress tests:
-    Login with said user + Fail
-    See user profile
     Update user + See user profile
