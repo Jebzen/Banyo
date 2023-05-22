@@ -42,12 +42,24 @@ The backend has a `.env` file for env variables in the database, JWS_Secret and 
   PASSWORD_HASH="SuperSecretKey"
 ```
 
+WARNING: Do not change the password hash if using the initialize command.
+
+#### Initialize
+
+To initialize the database, create a database called `banyo` in Mysql and call:
+
+```bash
+  http://localhost/Banyo/Backend/init
+```
+
+This will create the database table and create an `ADMIN` user if not already created, and will give it the password: `Admin`
+
 ### Frontend
 
 Once installed, go into
 
 ```bash
-  cd Frontend
+  cd Brontend
 ```
 
 And run the install command.

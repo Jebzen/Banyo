@@ -49,7 +49,7 @@ function Dashboard() {
 	return (
 		<main className="flex justify-center min-h-screen bg-light-grey">
 			<section className="h-fit rounded-lg self-center dashboard flex flex-col">
-				<h1 className="font-bold text-2xl mb-10">Users</h1>
+				<h1 className="font-bold text-2xl my-10">Users</h1>
 
 				<header className="gap-x-5 text-xs px-5 mb-3 hidden md:grid">
 					<p>Name</p>
@@ -59,13 +59,23 @@ function Dashboard() {
 
 				<section className="user-list flex flex-col">
 					{userList.map((data: any, index: any) => {
+						const today = new Date(data.created_at);
+						const f = new Intl.DateTimeFormat("en-us", {
+							dateStyle: "short",
+							timeStyle: "short",
+						});
 						return (
 							<section
 								key={index}
 								className="p-5 bg-white grid gap-x-5 mb-1 rounded text-sm leading-6"
 							>
-								<span className="username-text font-bold">{data.username}</span>
-								<span className="email-text">{data.email}</span>
+								<span className="username-text font-bold">
+									{data.username} <br />
+									<span className="text-xs font-light">{f.format(today)}</span>
+								</span>
+
+								<span className="email-text self-center">{data.email}</span>
+
 								{data.user_id == "1" ||
 								data.username.toLowerCase() == "admin" ? (
 									<span className="deleteIcon px-2 hover:text-red-600 w-fit cursor-not-allowed">
@@ -85,7 +95,7 @@ function Dashboard() {
 						);
 					})}
 				</section>
-				<section className="text-center mt-5 text-xs text-gray-500">
+				<section className="text-center mt-5 text-xs text-gray-500 mb-10">
 					<span>Go </span>
 					<a href="/login" className="underline">
 						Back

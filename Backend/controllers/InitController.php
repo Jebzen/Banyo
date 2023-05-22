@@ -18,7 +18,7 @@ class InitController{
     $tableQuery = $db->query("SHOW TABLES LIKE 'users'");
     $tableExists = $tableQuery->rowCount() > 0;
 
-    //$this->CreateAdmin();
+    $this->CreateAdmin();
     if(!$tableExists){
       jsonResponse(["message"=>"Database created"]);
     } else{
