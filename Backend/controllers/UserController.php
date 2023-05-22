@@ -210,7 +210,7 @@ class UserController{
     $stmt->bindParam(':user_id', $TokenData[1]->user_id);
     $stmt->execute();
     if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
-      jsonResponse(['error' => 'Incorrect user information']);
+      jsonResponse(['error' => 'Incorrect user information'],400);
     }
     
     // Check if the username and email already exist on another user

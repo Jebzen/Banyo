@@ -32,7 +32,11 @@ function UserProfile() {
 	return (
 		<main className="flex justify-center min-h-screen bg-light-grey flex-col">
 			<section className="h-fit md:rounded-lg self-center flex flex-col w-full md:w-96 bg-white p-5">
-				<Link to={"/edit/"} className="hover:text-blue-900 mb-14">
+				<Link
+					to={"/edit/"}
+					className="hover:text-blue-900 mb-14"
+					id="edit-link"
+				>
 					<h1 className="text-end">
 						<i className="bi bi-pencil-fill text-xl"></i>
 					</h1>
