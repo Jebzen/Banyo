@@ -1,7 +1,6 @@
-
 ## Deployment & Setup
 
-I have used WAMP for this project for PHP and mysql functionality: 
+I have used WAMP for this project for PHP and mysql functionality:
 https://www.wampserver.com/en/, and Vite for the Frontend React Application: https://vitejs.dev/
 
 The repo on my computer is under:
@@ -26,7 +25,7 @@ Then install all the composer packages with:
   php composer.phar update
 ```
 
-Then you can run your wamp64 server and it's path should be 
+Then you can run your wamp64 server and it's path should be
 
 ```bash
   "http://localhost/Banyo/Backend"
@@ -39,8 +38,8 @@ The backend has a `.env` file for env variables in the database, JWS_Secret and 
   DB_NAME=banyo
   DB_USER=root
   DB_PASS=
-  JWS_SECRET="*****"
-  PASSWORD_HASH="*****"
+  JWS_SECRET="SuperSecretKey"
+  PASSWORD_HASH="SuperSecretKey"
 ```
 
 ### Frontend
@@ -48,7 +47,7 @@ The backend has a `.env` file for env variables in the database, JWS_Secret and 
 Once installed, go into
 
 ```bash
-  cd Brontend
+  cd Frontend
 ```
 
 And run the install command.
