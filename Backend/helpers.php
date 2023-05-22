@@ -68,12 +68,15 @@ class tokenizer{
 function identifyAuthBearer(){
   try{
     $headers = getallheaders();
-    
-    if(!isset($headers['Authorization'])){
-      throw new Exception("Token not identified");
-    }
+    $Authorization = [];
 
-    $Authorization = explode(" ",$headers['Authorization']);
+    if(isset($headers['Authorization'])){
+      $Authorization = explode(" ",$headers['Authorization']);
+    } else if(isset($headers['authorization'])){
+      $Authorization = explode(" ",$headers['authorization']);
+    } else{
+      throw new Exception("Token authorization not identified: ");
+    }
 
     if(!isset($Authorization) || $Authorization[0] != "Bearer"){
       throw new Exception("Auth not bearer");
@@ -87,7 +90,7 @@ function identifyAuthBearer(){
     return [true, $token];
 
   } catch(Exception $e){
-    return [false, 'Bearer Token invalid'];
+    return [false, $e->getMessage()];
     //return [false, $e->getMessage() | 'Token invalid'];
   }
 }

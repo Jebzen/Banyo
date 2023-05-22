@@ -4,16 +4,16 @@ const checkToken = async () => {
 
 	try {
 		const response = await fetch(apiUrl + "/user", {
+			method: "GET",
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		});
+		const data = await response.json();
 
 		if (response.ok) {
-			const data = await response.json();
-			return data; // Assuming the response contains a 'valid' property indicating token validity
+			return data;
 		} else {
-			// Handle error response
 			throw new Error("Token verification failed");
 		}
 	} catch (error) {

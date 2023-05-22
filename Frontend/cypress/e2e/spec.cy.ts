@@ -55,10 +55,24 @@ describe("Profile", () => {
 			.type(user.password, { force: true });
 
 		//If click it creates user but cannot use Localstorage which the app uses so it goes back to /login
+
+		cy.intercept(
+			{
+				method: "GET",
+				hostname: "localhost",
+				url: "/Banyo/Backend/user",
+			},
+			{ log: true }
+		).as("apiCheck");
+
 		cy.get("button").click();
-		cy.wait(10000);
+
+		//cy.wait("@apiCheck").its("response.body").should("include", "error");
+
 		cy.getLocalStorage("jwsToken").then((localStorageValue) => {
 			expect(localStorageValue).to.not.be.null;
 		});
+
+		cy.url().should("include", "/login");
 	});
 });
