@@ -59,7 +59,7 @@ This will create the database table and create an `ADMIN` user if not already cr
 Once installed, go into
 
 ```bash
-  cd Brontend
+  cd Frontend
 ```
 
 And run the install command.
